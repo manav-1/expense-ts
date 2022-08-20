@@ -1,0 +1,496 @@
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown';
+import {
+  GradientContainer,
+  PaddedContainer,
+  ExpenseInput,
+  CenteredKarlaText,
+} from '../customComponents/styledComponents';
+import PropTypes from 'prop-types';
+import {ActivityIndicator, ProgressBar} from 'react-native-paper';
+import * as Yup from 'yup';
+import CustomExpense from '../customComponents/CustomExpense';
+import ExpenseAccordion from '../customComponents/ExpenseAccordion';
+import {Chip} from 'react-native-paper';
+import {sample} from 'lodash';
+// import DatePicker from 'react-native-date-picker';
+import DatePicker from 'react-native-neat-date-picker';
+import {snackbar} from '../state/snackbar';
+import {App, ExpenseIF, ExpenseType, ExpenseWay} from '../state/store';
+import Animated from 'react-native-reanimated';
+import {EasingNode as Easing} from 'react-native-reanimated';
+import {observer} from 'mobx-react';
+
+const Expenses = observer(({navigation}: {navigation: any}) => {
+  const [expenses, setExpenses] = React.useState<ExpenseIF[]>([]);
+  const [editKey, setEditKey] = React.useState<String>();
+  const [editable, setEditable] = React.useState(false);
+  const [expense, setExpense] = React.useState<ExpenseIF>({
+    value: 0,
+    description: '',
+    expenseType: ExpenseType.Credit,
+    expenseWay: ExpenseWay.Bank,
+    date: new Date(Date.now()).toISOString(),
+  });
+  const [showMore, setShowMore] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [expensesToShow, setExpensesToShow] = React.useState<
+    ExpenseIF[] | {[key: string]: ExpenseIF[]}
+  >(expenses);
+  //sorted by date
+  const [open, setOpen] = React.useState(false);
+  const [values, setValues] = React.useState('array');
+  const [visible, setVisible] = React.useState(false);
+
+  const height = React.useRef(new Animated.Value(0)).current;
+
+  const animatedHeightStyles = {
+    height,
+  };
+
+  React.useEffect(() => {
+    App.loadExpenses(true);
+    setExpenses(App.expenses);
+    setExpensesToShow(App.expenses);
+  }, []);
+  React.useEffect(() => {
+    if (visible) {
+      Animated.timing(height, {
+        duration: 200,
+        toValue: 350,
+        easing: Easing.ease,
+      }).start();
+    } else {
+      Animated.timing(height, {
+        duration: 200,
+        toValue: 0,
+        easing: Easing.ease,
+      }).start();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
+  const styles = StyleSheet.create({
+    addContainer: {
+      position: 'absolute',
+      zIndex: 100,
+      borderRadius: 10,
+      top: 100,
+      left: 10,
+      right: 10,
+      overflow: 'hidden',
+      backgroundColor: '#181824ee',
+      borderColor: '#ccf0fa',
+      borderWidth: !visible ? 0 : 1,
+      display: 'flex',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+    },
+    button: {
+      padding: 0,
+      height: 40,
+      backgroundColor: '#ccf0fa',
+      borderRadius: 10,
+      marginVertical: 5,
+      width: '100%',
+    },
+    expenseHeading: {
+      fontSize: 16,
+      color: '#fff',
+      fontFamily: 'Karla-Regular',
+    },
+    buttonText: {
+      color: '#000',
+      fontSize: 16,
+      fontFamily: 'Karla-Regular',
+      width: 100,
+    },
+    expenseInput: {
+      margin: 0,
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: '#000',
+      color: '#ccf0fa',
+      borderRadius: 1,
+    },
+    addButtonText: {
+      fontSize: 18,
+      color: '#000',
+      fontFamily: 'Karla-Regular',
+    },
+    addButton: {
+      width: 80,
+      height: 35,
+      alignSelf: 'flex-end',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#ccf0fa',
+      borderRadius: 5,
+      marginVertical: 10,
+      marginRight: 10,
+    },
+    dropdownStyle: {
+      borderRadius: 5,
+      backgroundColor: '#ccf0fa',
+      elevation: 0,
+      width: '40%',
+      // padding: 2
+    },
+    descriptionInput: {
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: '#000',
+      borderRadius: 1,
+      color: '#ccf0fa',
+      marginHorizontal: 10,
+    },
+    chip: {
+      marginHorizontal: 8,
+      marginBottom: 10,
+      height: 30,
+    },
+    tabBarTitle: {
+      fontSize: 25,
+      padding: 10,
+      margin: 5,
+      color: '#fff',
+      fontFamily: 'Karla-Regular',
+    },
+    tabStyles: {
+      // borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: '#181824',
+    },
+    logoutButton: {
+      marginRight: 10,
+      paddingLeft: 5,
+      width: 40,
+      height: 40,
+      borderRadius: 25,
+      backgroundColor: '#494c59',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });
+  const deleteExpenses = (expenseId: string) => {
+    App.deleteExpense(expenseId);
+  };
+  const handleNewExpense = async () => {
+    setIsLoading(true);
+    const validationSchema = Yup.object({
+      value: Yup.number().required('Please enter a value'),
+      expenseType: Yup.string().required('Please select an expense type'),
+      expenseWay: Yup.string().required('Please select an expense way'),
+      description: Yup.string().required('Please enter a description'),
+      date: Yup.date().required('Please enter a date'),
+    });
+    validationSchema
+      .validate(expense)
+      .then(() => {
+        // addExpenses({...expense, date: expense.date.toDateString()});
+        if (editable) App.updateExpense(expense, String(editKey));
+        else
+          App.addExpense({
+            expenseType:
+              ExpenseType.Credit === expense.expenseType
+                ? ExpenseType.Credit
+                : ExpenseType.Debit,
+            expenseWay: expense.expenseWay,
+            value: Number(expense.value),
+            description: String(expense.description),
+            date: new Date(expense.date).toISOString(),
+          });
+        setExpense({
+          value: 0,
+          description: '',
+          expenseType: ExpenseType.Credit,
+          expenseWay: ExpenseWay.Bank,
+          date: new Date(Date.now()).toISOString(),
+        });
+        setVisible(false);
+        setEditable(false);
+        setEditKey('');
+      })
+      .catch(err => {
+        snackbar.openSnackBar(err.message);
+      });
+    setIsLoading(false);
+  };
+  const editExpense = async (expense: ExpenseIF) => {
+    setVisible(true);
+    setExpense({
+      ...expense,
+      date: new Date(expense.date).toISOString(),
+    });
+    setEditable(true);
+    setEditKey(String(expense.expenseId));
+  };
+
+  const chips = [
+    {
+      label: 'All',
+      icon: 'wallet-outline',
+      onPress: () => {
+        setValues('array');
+        setExpensesToShow(expenses);
+      },
+    },
+    {
+      label: 'Debit',
+      icon: 'trending-down-outline',
+      onPress: () => {
+        setValues('array');
+        setExpensesToShow(App.getExpenseByType(ExpenseType.Debit));
+      },
+    },
+    {
+      label: 'Credit',
+      icon: 'trending-up-outline',
+      onPress: () => {
+        setValues('array');
+        setExpensesToShow(App.getExpenseByType(ExpenseType.Credit));
+      },
+    },
+    {
+      label: 'Expense Way',
+      icon: 'wallet-outline',
+      onPress: () => {
+        setValues('object');
+        setExpensesToShow(App.getGroupedExpensesByWay());
+      },
+    },
+    {
+      label: 'Date',
+      icon: 'calendar-outline',
+      onPress: () => {
+        setValues('object');
+        setExpensesToShow(App.getGroupedExpensesByMonth());
+      },
+    },
+  ];
+
+  return (
+    <GradientContainer>
+      <View style={styles.tabStyles}>
+        <Text style={styles.tabBarTitle}>Expenses</Text>
+        <TouchableOpacity
+          style={[styles.logoutButton, {paddingLeft: 0}]}
+          onPress={() => setVisible(!visible)}>
+          {!visible ? (
+            <Ionicons name="add" color="#fff" size={25} />
+          ) : (
+            <Ionicons name="close" color="#fff" size={25} />
+          )}
+        </TouchableOpacity>
+      </View>
+      <Animated.View style={[animatedHeightStyles, styles.addContainer]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            marginTop: 20,
+            marginHorizontal: 5,
+          }}>
+          <View style={{width: '94%'}}>
+            <Text style={styles.expenseHeading}>Expense Value</Text>
+            <ExpenseInput
+              keyboardType="numeric"
+              value={String(expense.value)}
+              onChangeText={(value: any) => setExpense({...expense, value})}
+              style={styles.expenseInput}
+              placeholder="Enter Expense Value"
+              placeholderTextColor="#fff5"
+            />
+          </View>
+          <View style={{width: '94%'}}>
+            <Text style={styles.expenseHeading}>Expense Description</Text>
+            <ExpenseInput
+              value={expense.description}
+              onChangeText={(value: any) =>
+                setExpense({
+                  ...expense,
+                  description: value,
+                })
+              }
+              style={styles.descriptionInput}
+              placeholder="Enter Description"
+              placeholderTextColor="#fff5"
+            />
+          </View>
+          <View style={{width: '43%', marginTop: 20}}>
+            <Text style={styles.expenseHeading}>Expense Type</Text>
+            <SelectDropdown
+              renderDropdownIcon={() => (
+                <Ionicons name="chevron-down" size={20} />
+              )}
+              dropdownOverlayColor="#161622AA"
+              defaultButtonText={'Expense Type'}
+              data={['Credit', 'Debit']}
+              dropdownStyle={styles.dropdownStyle}
+              buttonStyle={styles.button}
+              buttonTextStyle={styles.buttonText}
+              defaultValue={expense.expenseType}
+              onSelect={selectedItem =>
+                setExpense({
+                  ...expense,
+                  expenseType: selectedItem,
+                })
+              }
+            />
+          </View>
+
+          <View style={{width: '43%'}}>
+            <Text style={styles.expenseHeading}>Expense Way</Text>
+            <SelectDropdown
+              renderDropdownIcon={() => (
+                <Ionicons name="chevron-down" size={20} />
+              )}
+              dropdownOverlayColor="#506D8433"
+              defaultButtonText={'Expense Way'}
+              data={Object.keys(ExpenseWay)}
+              dropdownStyle={styles.dropdownStyle}
+              buttonStyle={styles.button}
+              defaultValue={expense.expenseWay}
+              buttonTextStyle={styles.buttonText}
+              onSelect={selectedItem =>
+                setExpense({
+                  ...expense,
+                  expenseWay: selectedItem,
+                })
+              }
+            />
+          </View>
+          <View style={{width: '45%'}}>
+            <Text style={styles.expenseHeading}>Date</Text>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                {
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}
+              onPress={() => setOpen(true)}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: 'Karla-Regular',
+                }}>
+                {new Date(expense.date).toDateString()}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <DatePicker
+            isVisible={open}
+            mode={'single'}
+            onConfirm={(date: {dateString: string | number | Date}) => {
+              setOpen(false);
+              setExpense({
+                ...expense,
+                date: new Date(date.dateString).toISOString(),
+              });
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.addButton} onPress={handleNewExpense}>
+          <CenteredKarlaText>
+            <Ionicons name="save-outline" color="#000" size={14} />
+            &nbsp;Save
+          </CenteredKarlaText>
+        </TouchableOpacity>
+      </Animated.View>
+
+      <PaddedContainer>
+        <ScrollView horizontal>
+          {chips.map((chip, index) => (
+            <Chip
+              key={index}
+              style={styles.chip}
+              onPress={chip.onPress}
+              icon={() => <Ionicons name={chip.icon} color="#000" size={15} />}>
+              {chip.label}
+            </Chip>
+          ))}
+        </ScrollView>
+        <ScrollView
+          style={{
+            height: '100%',
+          }}
+          contentContainerStyle={{
+            justifyContent: 'space-around',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+          }}>
+          {values === 'array' &&
+            Array.isArray(expensesToShow) &&
+            expensesToShow.map((expense: ExpenseIF, index: number) => (
+              <CustomExpense
+                expense={expense}
+                deleteItem={deleteExpenses}
+                editItem={editExpense}
+                key={index}
+              />
+            ))}
+          {values === 'object' &&
+            expensesToShow !== null &&
+            expensesToShow.constructor.name === 'Object' &&
+            Object.keys(expensesToShow).map((key: string, index) => {
+              const extoShow: {[key: string]: ExpenseIF[]} = expensesToShow as {
+                [key: string]: ExpenseIF[];
+              };
+              return (
+                <ExpenseAccordion
+                  title={key}
+                  expenses={extoShow[key]}
+                  deleteExpenses={deleteExpenses}
+                  editItem={editExpense}
+                  key={index}
+                />
+              );
+            })}
+        </ScrollView>
+        <TouchableOpacity
+          style={{
+            alignSelf: 'flex-end',
+            marginBottom: 15,
+          }}
+          onPress={() => setShowMore(!showMore)}>
+          {expensesToShow.length > 6 && values === 'array' ? (
+            !showMore ? (
+              <Text style={{fontSize: 18, color: '#fff'}}>
+                Show More &nbsp;
+                <Ionicons name="chevron-down" size={20} />
+              </Text>
+            ) : (
+              <Text style={{fontSize: 18, color: '#fff'}}>
+                Show Less &nbsp;
+                <Ionicons name="chevron-up" size={20} />
+              </Text>
+            )
+          ) : null}
+        </TouchableOpacity>
+      </PaddedContainer>
+
+      {isLoading ? <ActivityIndicator size={30} color="#f1c0cb" /> : null}
+      {isLoading ? <ProgressBar indeterminate color="#fff" /> : null}
+    </GradientContainer>
+  );
+});
+
+export default Expenses;
