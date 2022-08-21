@@ -188,12 +188,12 @@ const styles = StyleSheet.create({
   header: {
     color: '#000',
     fontSize: 30,
-    fontFamily: 'poppins',
+    fontFamily: 'Poppins-Regular',
     textAlign: 'left',
   },
   light: {
     textAlign: 'center',
-    fontFamily: 'poppins',
+    fontFamily: 'Poppins-Regular',
     fontSize: 16,
     color: '#000',
   },
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     padding: 10,
     color: '#fff',
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins-Regular',
   },
   tabStyles: {
     // borderRadius: 10,
