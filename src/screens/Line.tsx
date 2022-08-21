@@ -1,8 +1,6 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, Dimensions, StyleSheet} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import {Text as TextSVG} from 'react-native-svg';
 import {observer} from 'mobx-react';

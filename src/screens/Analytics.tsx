@@ -1,6 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import {
@@ -232,7 +229,11 @@ const AnalyticsScreen = observer(() => {
         <View style={{padding: 10}} />
         <ScrollView horizontal>
           {expensesForAnalytics.map((expense, index) => (
-            <CustomExpense key={index} expense={expense} />
+            <CustomExpense
+              key={index}
+              expense={expense}
+              deleteItem={() => App.deleteExpense(String(expense.expenseId))}
+            />
           ))}
         </ScrollView>
       </PaddedContainer>
@@ -281,10 +282,3 @@ const styles = StyleSheet.create({
 });
 
 export default AnalyticsScreen;
-
-// import {Text} from 'react-native-paper';
-// import React from 'react';
-
-// export default function () {
-//   <Text>Analytics</Text>;
-// }

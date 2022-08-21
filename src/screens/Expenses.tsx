@@ -339,6 +339,8 @@ const Expenses = observer(({navigation}: {navigation: any}) => {
               buttonStyle={styles.button}
               buttonTextStyle={styles.buttonText}
               defaultValue={expense.expenseType}
+              buttonTextAfterSelection={item => item}
+              rowTextForSelection={item => item}
               onSelect={selectedItem =>
                 setExpense({
                   ...expense,
@@ -360,6 +362,8 @@ const Expenses = observer(({navigation}: {navigation: any}) => {
               dropdownStyle={styles.dropdownStyle}
               buttonStyle={styles.button}
               defaultValue={expense.expenseWay}
+              buttonTextAfterSelection={item => item}
+              rowTextForSelection={item => item}
               buttonTextStyle={styles.buttonText}
               onSelect={selectedItem =>
                 setExpense({

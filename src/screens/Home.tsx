@@ -1,4 +1,3 @@
-// /* eslint-disable no-shadow */
 import * as React from 'react';
 import {
   Text,
@@ -7,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import PropTypes from 'prop-types';
 import CustomExpense from '../customComponents/customHomeExpense';
 import LineChartScreen from './Line';
 import Analytics from '../customComponents/Analytics';
@@ -23,8 +21,10 @@ import {App, ExpenseIF, ExpenseType} from '../state/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {observer} from 'mobx-react';
 import {groupBy} from 'lodash';
+import {useTheme} from 'react-native-paper';
 
 const HomeScreen = observer(({navigation}: {navigation: any}) => {
+  const {colors}: {colors: any} = useTheme();
   const [expenses, setExpenses] = React.useState<ExpenseIF[]>([]);
 
   const handleLogout = async () => {
@@ -69,8 +69,97 @@ const HomeScreen = observer(({navigation}: {navigation: any}) => {
   }, [navigation]);
   React.useEffect(() => {
     App.loadExpenses(true);
-    setExpenses(App.expenses);
+    setExpenses(App.getExpensesForCurrentMonth);
   }, []);
+
+  const styles = StyleSheet.create({
+    header: {
+      color: colors.primaryText,
+      fontSize: 30,
+      fontFamily: 'Poppins-Regular',
+      textAlign: 'left',
+    },
+    light: {
+      textAlign: 'center',
+      fontFamily: 'Poppins-Regular',
+      fontSize: 16,
+      color: colors.primaryText,
+    },
+    money: {
+      color: colors.primaryText,
+      fontSize: 45,
+      fontFamily: 'ReadexPro-Regular',
+      marginVertical: 5,
+      letterSpacing: 0.1,
+    },
+    oval: {
+      width: 80,
+      height: 80,
+      borderWidth: 1.5,
+      borderRadius: 120,
+      transform: [{scaleX: 3}, {rotate: '30deg'}],
+      position: 'absolute',
+      left: 100,
+      top: 5,
+      borderColor: '#8f106033',
+    },
+    heading: {
+      fontFamily: 'Karla-Regular',
+      fontSize: 22,
+      textAlign: 'center',
+      marginVertical: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#fff',
+    },
+    tabBarTitle: {
+      fontSize: 23,
+      padding: 10,
+      color: '#fff',
+      fontFamily: 'Poppins-Regular',
+    },
+    tabStyles: {
+      // borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      backgroundColor: colors.primaryBackground,
+    },
+    logoutButton: {
+      marginRight: 10,
+      paddingLeft: 5,
+      width: 40,
+      height: 40,
+      borderRadius: 25,
+      backgroundColor: '#494c59',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    linearGradient: {
+      borderRadius: 20,
+      padding: 10,
+      marginHorizontal: 50,
+    },
+    extraHeading: {
+      textAlign: 'left',
+      fontWeight: '600',
+      fontFamily: 'Karla-Regular',
+      fontSize: 18,
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+    },
+    karlaText: {
+      fontFamily: 'Poppins-SemiBold',
+      fontSize: 12,
+      marginBottom: -5,
+      color: colors.primaryText,
+    },
+    verticalMargin: {marginVertical: 10},
+  });
 
   return (
     <GradientContainer>
@@ -85,7 +174,7 @@ const HomeScreen = observer(({navigation}: {navigation: any}) => {
       <PaddedContainer>
         <LinearGradient
           style={styles.linearGradient}
-          colors={['#ffc290', '#e1f8ff']}
+          colors={[colors.graphColorPrimary, colors.graphColorSecondary]}
           start={{x: 0, y: 0.2}}
           end={{x: 1, y: 1}}>
           <Text style={styles.light}>This Month&apos;s Money</Text>
@@ -183,92 +272,3 @@ const HomeScreen = observer(({navigation}: {navigation: any}) => {
 });
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  header: {
-    color: '#000',
-    fontSize: 30,
-    fontFamily: 'Poppins-Regular',
-    textAlign: 'left',
-  },
-  light: {
-    textAlign: 'center',
-    fontFamily: 'Poppins-Regular',
-    fontSize: 16,
-    color: '#000',
-  },
-  money: {
-    color: '#000',
-    fontSize: 45,
-    fontFamily: 'ReadexPro-Regular',
-    marginVertical: 5,
-    letterSpacing: 0.1,
-  },
-  oval: {
-    width: 80,
-    height: 80,
-    borderWidth: 1.5,
-    borderRadius: 120,
-    transform: [{scaleX: 3}, {rotate: '30deg'}],
-    position: 'absolute',
-    left: 100,
-    top: 5,
-    borderColor: '#8f106033',
-  },
-  heading: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 22,
-    textAlign: 'center',
-    marginVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#fff',
-  },
-  tabBarTitle: {
-    fontSize: 23,
-    padding: 10,
-    color: '#fff',
-    fontFamily: 'Poppins-Regular',
-  },
-  tabStyles: {
-    // borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#181824',
-  },
-  logoutButton: {
-    marginRight: 10,
-    paddingLeft: 5,
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    backgroundColor: '#494c59',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  linearGradient: {
-    borderRadius: 20,
-    padding: 10,
-    marginHorizontal: 50,
-  },
-  extraHeading: {
-    textAlign: 'left',
-    fontWeight: '600',
-    fontFamily: 'Karla-Regular',
-    fontSize: 18,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  karlaText: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 12,
-    marginBottom: -5,
-    color: '#000',
-  },
-  verticalMargin: {marginVertical: 10},
-});

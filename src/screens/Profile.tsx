@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 import React from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -195,9 +194,3 @@ const styles = StyleSheet.create({
 });
 
 export default Profile;
-// import {Text} from 'react-native-paper';
-// import React from 'react';
-
-// export default function () {
-//   return <Text>Profile Screen</Text>;
-// }

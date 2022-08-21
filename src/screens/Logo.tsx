@@ -4,9 +4,14 @@ import PropTypes from 'prop-types';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {useTheme, Headline} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const Img = require('../../assets/cherry-pick-bitcoins.png');
+const Logo1 = require('../../assets/logo1.png');
+const Logo2 = require('../../assets/logo2.png');
+const Logo3 = require('../../assets/logo3.png');
+const Logo4 = require('../../assets/logo4.png');
 
 const HomeScreen = ({navigation}: {navigation: any}) => {
+  const logo = [Logo1, Logo2, Logo3, Logo4];
+  const Logo = logo[Math.floor(Math.random() * logo.length)];
   const {colors} = useTheme();
   const styles = StyleSheet.create({
     textContainer: {
@@ -39,7 +44,7 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   return (
     <View style={[StyleSheet.absoluteFill, styles.textContainer]}>
       <Image
-        source={Img}
+        source={Logo}
         style={{
           width: 250,
           height: 250,

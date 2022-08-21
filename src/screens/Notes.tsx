@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {
@@ -8,13 +6,9 @@ import {
   ExpenseInput,
   CenteredKarlaText,
 } from '../customComponents/styledComponents';
-// import DatePicker from 'react-native-datepicker';
 import DatePicker from 'react-native-neat-date-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
-// import database from '@react-native-firebase/database';
-// import auth from '@react-native-firebase/auth';
 import CustomNote from '../customComponents/CustomNote';
 import {snackbar} from '../state/snackbar';
 import {App, NoteIF} from '../state/store';
@@ -31,35 +25,6 @@ const Notes = observer(() => {
     App.loadNotes();
     setNotes(App.notes);
   }, []);
-
-  // const fetchData = () => {
-  //   const userId = auth().currentUser.uid;
-  //   database()
-  //     .ref(userId)
-  //     .child('/notes/')
-  //     .on('value', data => {
-  //       if (data.val()) {
-  //         let values = {...data.val()};
-  //         let notes = [];
-  //         for (let key in values) {
-  //           values[key].key = key;
-  //           values[key].index = notes.length;
-  //           notes.push(values[key]);
-  //         }
-  //         setNotes(notes);
-  //       } else {
-  //         setNotes([]);
-  //       }
-  //     });
-  // };
-
-  // React.useEffect(() => {
-  //   setUser(auth().currentUser);
-  //   fetchData();
-  //   return () => {
-  //     database().ref(auth().currentUser.userId).child('/notes/').off();
-  //   };
-  // }, []);
 
   const handleNewNote = () => {
     const values = {date: date, noteText: note};
@@ -81,20 +46,11 @@ const Notes = observer(() => {
       });
     setNotesVisible(false);
   };
-  // const addNote = item => {
-  //   database().ref(`/${user.uid}/notes/`).push(item);
-  //   fetchData();
-  // };
-  // const deleteNote = index => {
-  //   database().ref(`/${user.uid}/notes/`).child(notes[index].key).remove();
-  // };
 
   return (
     <>
       <GradientContainer>
-        <View
-          // colors={['#153759AA', '#fff']}
-          style={styles.tabStyles}>
+        <View style={styles.tabStyles}>
           <Text style={styles.tabBarTitle}>Notes</Text>
           <TouchableOpacity
             style={[styles.logoutButton, {paddingLeft: 0}]}
@@ -200,10 +156,3 @@ const styles = StyleSheet.create({
 });
 
 export default Notes;
-
-// import {Text} from 'react-native-paper';
-// import React from 'react';
-
-// export default function () {
-//   <Text>Notes</Text>;
-// }

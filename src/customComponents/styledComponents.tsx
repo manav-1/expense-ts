@@ -1,5 +1,9 @@
 import styled from 'styled-components/native';
 import {Dimensions} from 'react-native';
+import {Appearance} from 'react-native';
+import {darkTheme, lightTheme} from '../state/theme';
+
+const theme = Appearance.getColorScheme() === 'dark' ? darkTheme : lightTheme;
 
 const MainContainer = styled.View`
   background: #fff9;
@@ -98,17 +102,6 @@ const FullContainer = styled.View`
   bottom: 0;
   background-image: linear-gradient(to top right, pink, white, pink);
 `;
-// const GradientContainer = styled(LinearGradient).attrs({
-//   colors: ['#fffA', '#181D31'],
-//   start: { x: 0, y: 0.2 },
-//   end: { x: 0, y: 2 }
-// })`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-// `;
 
 const GradientContainer = styled.View`
   position: absolute;

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import {
   View,
@@ -9,7 +8,6 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PropTypes from 'prop-types';
 import {ExpenseClient} from '../axios/client';
 
 import {snackbar} from '../state/snackbar';
@@ -23,7 +21,6 @@ import {
   ButtonText,
   Login,
   LoginContainer,
-  BgImage,
   SignText,
   RowContainer,
   IconText,
@@ -99,10 +96,6 @@ const LoginScreen = observer(({navigation}: {navigation: any}) => {
             justifyContent: 'center',
           },
         ]}>
-        {/* <BgImage
-          style={{ transform: [{ rotate: '-5deg' }, { scale: 1.2 }] }}
-          source={Img}
-        /> */}
         <MainContainer>
           <Title>Login Here</Title>
           <Input

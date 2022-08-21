@@ -1,24 +1,18 @@
 import {StatusBar, Text} from 'react-native';
 import * as React from 'react';
-import {DefaultTheme, Provider} from 'react-native-paper';
+import {Provider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/navigation/HomeStack';
 import {snackbar} from './src/state/snackbar';
 import {Snackbar} from 'react-native-paper';
 import {observer} from 'mobx-react';
+import {Appearance} from 'react-native';
+import {darkTheme, lightTheme} from './src/state/theme';
 
-const theme = {
-  ...DefaultTheme,
-  roundness: 2,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#181D31',
-    accent: '#678983',
-  },
-};
 const App = observer(() => {
   return (
-    <Provider theme={theme}>
+    <Provider
+      theme={Appearance.getColorScheme() === 'light' ? lightTheme : darkTheme}>
       <NavigationContainer>
         <StackNavigation />
         <StatusBar hidden />

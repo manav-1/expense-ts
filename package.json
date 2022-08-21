@@ -8,7 +8,7 @@
     "start": "npx react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "create-apk": "cd android && ./gradlew assembleRelease && cd .."
+    "create-apk": "cd android && ANDROID_SDK_ROOT='/home/manav/Android/Sdk' ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.9",

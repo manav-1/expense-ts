@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import {
   View,
@@ -8,10 +7,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {snackbar} from '../state/snackbar';
-// import auth from '@react-native-firebase/auth';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
-// import Img from '../../assets/abstract-6.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   MainContainer,
@@ -93,10 +89,6 @@ const SignupScreen = observer(({navigation}: {navigation: any}) => {
             justifyContent: 'center',
           },
         ]}>
-        {/* <BgImage
-          style={{ transform: [{ rotate: '5deg' }, { scale: 1.2 }] }}
-          source={Img}
-        /> */}
         <MainContainer>
           <Title>SignUp Here</Title>
           <Input

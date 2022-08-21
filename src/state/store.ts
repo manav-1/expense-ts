@@ -69,6 +69,12 @@ const AppStore = types
     getExpensesByWay(way: ExpenseWay) {
       return self.expenses.filter(expense => expense.expenseWay === way);
     },
+    getExpensesForCurrentMonth() {
+      const currentMonth = new Date().getMonth();
+      return self.expenses.filter(
+        expense => new Date(expense.date).getMonth() === currentMonth,
+      );
+    },
     getGroupedExpensesByWay() {
       const groupedExpenses: {[key: string]: ExpenseIF[]} = {};
       self.expenses.forEach(expense => {
