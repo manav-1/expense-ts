@@ -52,12 +52,18 @@ const CustomExpense = ({
       style={[
         styles.mainContainer,
         {
-          backgroundColor: expense.type === 'Debit' ? '#C46e5c88' : '#A6CF9855',
-          borderColor: expense.type === 'Debit' ? '#DB7A67' : '#709E60',
+          backgroundColor:
+            expense.expenseType === 'Debit' ? '#C46e5c88' : '#A6CF9855',
+          borderColor: expense.expenseType === 'Debit' ? '#DB7A67' : '#709E60',
         },
       ]}>
-      <View style={{alignItems: 'center'}}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <View
+        style={{
+          alignItems: 'center',
+          margin: 10,
+          padding: 10,
+        }}>
+        <View style={{justifyContent: 'space-around', alignItems: 'center'}}>
           {/* <Text numberOfLines={1} style={styles.expenseName}>
                         {expense.description}
                     </Text> */}
@@ -72,17 +78,19 @@ const CustomExpense = ({
           <Chip
             mode="outlined"
             style={[styles.chipStyle]}
-            icon={() => getExpenseType(expense.type)}>
-            <Text style={styles.chipText}>{expense.type}</Text>
+            icon={() => getExpenseType(expense.expenseType)}>
+            <Text style={styles.chipText}>{expense.expenseType}</Text>
           </Chip>
           <Chip
             mode="outlined"
             style={styles.chipStyle}
-            icon={() => getWayIcon(expense.way)}>
-            <Text style={styles.chipText}>{expense.way}</Text>
+            icon={() => getWayIcon(expense.expenseWay)}>
+            <Text style={styles.chipText}>{expense.expenseWay}</Text>
           </Chip>
         </View>
-        <Text style={[styles.expenseName, {fontSize: 13}]}>{expense.date}</Text>
+        <Text style={[styles.expenseName, {fontSize: 13}]}>
+          {new Date(expense.date).toDateString()}
+        </Text>
       </View>
       {deleteItem && (
         <TouchableOpacity
@@ -121,12 +129,12 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     // flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     margin: 5,
     marginBottom: 10,
-    padding: 30,
-    width: Dimensions.get('window').width / 2 - 25,
+    // padding: 20,
+    // width: Dimensions.get('window').width / 2 - 20,
     borderWidth: 1.2,
     borderColor: '#e1f8ff',
     backgroundColor: '#1e1e2d',

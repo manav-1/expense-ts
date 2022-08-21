@@ -27,12 +27,13 @@ import {
   IconText,
 } from '../customComponents/styledComponents';
 import {ExpenseClient} from '../axios/client';
+import {observer} from 'mobx-react';
 
 const source = {
   uri: 'https://images.unsplash.com/photo-1623911381192-5936d58af80a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=100',
 };
 
-const SignupScreen = ({navigation}: {navigation: any}) => {
+const SignupScreen = observer(({navigation}: {navigation: any}) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
@@ -143,9 +144,6 @@ const SignupScreen = ({navigation}: {navigation: any}) => {
       </View>
     </ImageBackground>
   );
-};
+});
 
-SignupScreen.propTypes = {
-  navigation: PropTypes.object,
-};
 export default SignupScreen;

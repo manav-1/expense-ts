@@ -79,6 +79,16 @@ const AppStore = types
       });
       return groupedExpenses;
     },
+    getGroupedExpensesByType() {
+      const groupedExpenses: {[key: string]: ExpenseIF[]} = {};
+      self.expenses.forEach(expense => {
+        if (!groupedExpenses[expense.expenseType]) {
+          groupedExpenses[expense.expenseType] = [];
+        }
+        groupedExpenses[expense.expenseType].push(expense);
+      });
+      return groupedExpenses;
+    },
     getGroupedExpensesByMonth() {
       const groupedExpenses: {[key: string]: ExpenseIF[]} = {};
       self.expenses.forEach(expense => {
@@ -192,7 +202,6 @@ const AppStore = types
         if (data.success) snackbar.openSnackBar('Updated successfully');
         self.loadExpenses();
       } catch (err) {
-        console.log(err);
         snackbar.openSnackBar('Something went wrong');
       }
     },

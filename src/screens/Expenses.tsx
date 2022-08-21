@@ -15,14 +15,11 @@ import {
   ExpenseInput,
   CenteredKarlaText,
 } from '../customComponents/styledComponents';
-import PropTypes from 'prop-types';
 import {ActivityIndicator, ProgressBar} from 'react-native-paper';
 import * as Yup from 'yup';
 import CustomExpense from '../customComponents/CustomExpense';
 import ExpenseAccordion from '../customComponents/ExpenseAccordion';
 import {Chip} from 'react-native-paper';
-import {sample} from 'lodash';
-// import DatePicker from 'react-native-date-picker';
 import DatePicker from 'react-native-neat-date-picker';
 import {snackbar} from '../state/snackbar';
 import {App, ExpenseIF, ExpenseType, ExpenseWay} from '../state/store';

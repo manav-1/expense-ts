@@ -12,10 +12,11 @@ import {ProgressBar} from 'react-native-paper';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {App} from '../state/store';
 import {UserIF} from '../state/store';
+import {observer} from 'mobx-react';
 
 const tempImage = require('../../assets/programmer.png');
 
-const Profile = () => {
+const Profile = observer(() => {
   const [user, setUser] = React.useState<UserIF>();
   const [userName, setUserName] = React.useState<String>();
   const [userEmail, setUserEmail] = React.useState<String>();
@@ -112,7 +113,7 @@ const Profile = () => {
       </PaddedContainer>
     </GradientContainer>
   );
-};
+});
 const styles = StyleSheet.create({
   text: {
     fontSize: 20,

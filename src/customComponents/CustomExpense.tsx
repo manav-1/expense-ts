@@ -75,8 +75,8 @@ const NewCustomExpense = ({
   editItem,
 }: {
   expense: any;
-  deleteItem: Function;
-  editItem: Function;
+  deleteItem?: Function;
+  editItem?: Function;
 }) => {
   const getWayIcon = (way: String) => {
     switch (way) {
@@ -146,18 +146,18 @@ const NewCustomExpense = ({
         {new Date(expense.date).toDateString()}
       </Text>
       {deleteItem && (
-        <>
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => deleteItem(expense.expenseId)}>
-            <FontAwesome5 name="times-circle" size={20} color="#fff" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.deleteButton, {right: 40, top: 6}]}
-            onPress={() => editItem(expense)}>
-            <FontAwesome5 name="edit" size={16} color="#fff" />
-          </TouchableOpacity>
-        </>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => deleteItem(expense.expenseId)}>
+          <FontAwesome5 name="times-circle" size={20} color="#fff" />
+        </TouchableOpacity>
+      )}
+      {editItem && (
+        <TouchableOpacity
+          style={[styles.deleteButton, {right: 40, top: 6}]}
+          onPress={() => editItem(expense)}>
+          <FontAwesome5 name="edit" size={16} color="#fff" />
+        </TouchableOpacity>
       )}
     </View>
   );

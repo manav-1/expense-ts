@@ -54,7 +54,6 @@ const HomeTabNavigation = () => {
             ),
           tabBarIndicatorStyle: {backgroundColor: '#25253d'},
         }}
-        lazy
       />
 
       <Tab.Screen
@@ -69,7 +68,6 @@ const HomeTabNavigation = () => {
             ),
           tabBarIndicatorStyle: {backgroundColor: '#25253d'},
         }}
-        lazy
       />
       <Tab.Screen
         name="Analytics"
