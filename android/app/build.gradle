@@ -226,9 +226,9 @@ android {
         }
         release {
             storeFile file('release.keystore')
-            storePassword System.console().readLine("\n Enter keystore password: ")
+            storePassword 'bhumimanav1@'
             keyAlias 'release'
-            keyPassword System.console().readLine("\n Enter key password: ")
+            keyPassword 'bhumimanav1@'
         }
     }
     buildTypes {
