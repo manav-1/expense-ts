@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {useTheme, Headline} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {App} from '../state/store';
 const Logo1 = require('../../assets/logo1.png');
 const Logo2 = require('../../assets/logo2.png');
 const Logo3 = require('../../assets/logo3.png');
@@ -33,6 +34,9 @@ const HomeScreen = ({navigation}: {navigation: any}) => {
   });
   React.useEffect(() => {
     const checkLoggedIn = async () => {
+      await App.loadExpenses();
+      await App.loadNotes();
+      await App.loadUser();
       if (await AsyncStorage.getItem('expense_user')) {
         navigation.push('HomeNav');
       } else {

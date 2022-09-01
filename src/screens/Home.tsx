@@ -68,8 +68,7 @@ const HomeScreen = observer(({navigation}: {navigation: any}) => {
     })();
   }, [navigation]);
   React.useEffect(() => {
-    App.loadExpenses(true);
-    setExpenses(App.getExpensesForCurrentMonth);
+    setExpenses(App.expenses);
   }, []);
 
   const styles = StyleSheet.create({

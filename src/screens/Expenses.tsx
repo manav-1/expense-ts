@@ -55,7 +55,6 @@ const Expenses = observer(({navigation}: {navigation: any}) => {
   };
 
   React.useEffect(() => {
-    App.loadExpenses(true);
     setExpenses(App.expenses);
     setExpensesToShow(App.expenses);
   }, []);

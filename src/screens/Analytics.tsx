@@ -11,7 +11,7 @@ import {groupBy} from 'lodash';
 import CustomExpense from '../customComponents/customHomeExpense';
 import Analytics from '../customComponents/Analytics';
 import LineScreen from './Line';
-import {App, ExpenseIF} from '../state/store';
+import {App, ExpenseIF, ExpenseType} from '../state/store';
 import {observer} from 'mobx-react';
 
 const MONTHS = [
@@ -52,9 +52,11 @@ const AnalyticsScreen = observer(() => {
       ),
     );
   };
-  const groupByDates = (expenses: ExpenseIF[]) => {
+  const groupByDates = (expenseNew: ExpenseIF[]) => {
     const groupedByDate = groupBy(
-      expenses.filter(expense => expense.expenseType === 'Debit'),
+      expenseNew
+        .filter(expense => expense.expenseType === ExpenseType.Debit)
+        .map(item => ({...item, date: new Date(item.date).toDateString()})),
       'date',
     );
     let obj: {[key: string]: number} = {};
@@ -65,12 +67,22 @@ const AnalyticsScreen = observer(() => {
           .toFixed(2),
       );
     });
+    // if (Object.keys(obj).length > 7) {
+    //   const sevenDay: {[key: string]: number} = {};
+    //   Object.keys(obj).forEach(key => {
+    //     if (new Date().getDate() - new Date(key).getDate() <= 7) {
+    //       sevenDay[key] = obj[key];
+    //     }
+    //   });
+    //   return sevenDay;
+    // }
     return obj;
   };
 
   React.useEffect(() => {
-    App.loadExpenses();
     setExpenses(App.expenses);
+  }, []);
+  React.useEffect(() => {
     setEFA(MONTHS[new Date().getMonth()], new Date().getFullYear());
   }, []);
   return (

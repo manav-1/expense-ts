@@ -24,7 +24,6 @@ const Profile = observer(() => {
 
   React.useEffect(() => {
     (async () => {
-      await App.loadUser();
       setUser(App.user);
       setUserName(App.user.userName);
       setUserEmail(App.user.userEmail);

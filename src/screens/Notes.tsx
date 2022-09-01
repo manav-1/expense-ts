@@ -22,7 +22,6 @@ const Notes = observer(() => {
   const [notesVisible, setNotesVisible] = React.useState(false);
 
   React.useEffect(() => {
-    App.loadNotes();
     setNotes(App.notes);
   }, []);
 
