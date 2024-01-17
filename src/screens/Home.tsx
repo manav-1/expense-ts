@@ -98,8 +98,8 @@ const HomeScreen = observer(({navigation}: {navigation: any}) => {
       borderRadius: 120,
       transform: [{scaleX: 3}, {rotate: '30deg'}],
       position: 'absolute',
-      left: 100,
-      top: 5,
+      left: '40%',
+      top: '5%',
       borderColor: '#8f106033',
     },
     heading: {
@@ -137,7 +137,6 @@ const HomeScreen = observer(({navigation}: {navigation: any}) => {
     linearGradient: {
       borderRadius: 20,
       padding: 10,
-      marginHorizontal: 50,
     },
     extraHeading: {
       textAlign: 'left',

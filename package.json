@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "ANDROID_SDK_ROOT='/home/manav/Android/Sdk' npx react-native run-android",
+    "android": "npx react-native run-android",
     "ios": "react-native run-ios",
     "start": "npx react-native start",
     "test": "jest",
